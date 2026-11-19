@@ -2,6 +2,33 @@
 
 [日本語](#日本語) / English
 
+<!-- plain-language-2026-11-19 -->
+## やさしい説明(子どもにも)
+
+**これは「AI のモデルを、別の読み取りソフトでも読めるように直す、小さな道具」です。**
+
+- AI のモデルは、ファイル(`.onnx`)に入っています。いろいろな読み取りソフトがありますが、ソフトごとに「読めること」が少しずつちがいます。
+- `tract` という読み取りソフト(Rust 言語だけで作られていて、とても軽い)は、ふつうの読み取りソフトより少しだけ読める範囲がせまく、人気のモデル(音楽を楽器ごとに分ける AI など)が読めないことがあります。
+- この道具は、そのモデルの「読めない 2 か所」を、答えが変わらないように直します。
+
+**正直なお知らせ**: 直したモデルは、入力の大きさが決まったものしか受け付けません(たとえば音楽なら、決まった長さに区切って何回かに分けて渡します)。
+
+### 専門家向けの要点
+`Pad` の省略された 3 番目の入力を明示的な 0 定数で補い、`Range` は onnxruntime で 1 回実行して値を捕捉し、initializer(外部データ)として焼き込む(2 GB のプロトコルバッファ上限を回避)。実モデル HT-Demucs で検証済み(.onnx 本体は約 148 MB)。
+
+## In plain words (for everyone, kids too)
+
+**This is a small tool that fixes an AI model so that another reader program can read it.**
+
+- An AI model lives in a file (`.onnx`). There are several reader programs, and each one can read a slightly different set of things.
+- A reader called `tract` (built only in the Rust language, and very light) can read a little less than the usual readers, so some popular models (for example an AI that separates music into instruments) fail to load.
+- This tool fixes the two "unreadable spots" in the model without changing its answers.
+
+**An honest note**: a fixed model accepts only one input size (for music, you cut the song into pieces of that length and feed them in several times).
+
+### Key points for experts
+It fills the omitted 3rd input of `Pad` with an explicit zero constant, and runs the graph once in onnxruntime to capture each `Range` output, baking the values in as initializers with external data (avoiding the 2 GB protobuf limit). Verified on the real HT-Demucs model (the .onnx body is about 148 MB).
+
 A small command-line tool that patches PyTorch-exported ONNX graphs so they
 load in [`tract`](https://github.com/sonos/tract) (a pure-Rust ONNX inference
 engine), by working around two of tract's ONNX operator implementations
