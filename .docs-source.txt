@@ -1,3 +1,3 @@
 source: aon-co-jp/tract-onnx-patch
-commit: 557e16860747803ada709eae8726115c981a8dde
-updated: 2026-11-25T05:52:40Z
+commit: edf3867912ea95cf816e9978d8bf116b05a53295
+updated: 2026-11-27T05:30:40Z
